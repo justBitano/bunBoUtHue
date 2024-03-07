@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,6 +23,8 @@ import static com.bunBoUtHue.foodStall.enums.UserRole.MANAGER;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfiguration {
 
@@ -34,7 +38,10 @@ public class WebSecurityConfiguration {
         return httpSecurity
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**", "/sign-up", "/order/**")
+                .requestMatchers(
+                        "/api/v1/auth/**",  "/v3/**", "/swagger-ui/**"
+
+                )
                 .permitAll()
                 .requestMatchers("/api/v1/demo-controller/**" ).hasAnyRole(ADMIN.name(), MANAGER.name())
            /*     .requestMatchers(HttpMethod.GET, "/api/v1/demo-controller/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
